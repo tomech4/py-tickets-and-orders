@@ -66,3 +66,13 @@ class Order(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+
+class Ticket(models.Model):
+    movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name="tickets")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="tickets")
+    row = models.IntegerField()
+    seat = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.movie_session.movie.title} {self.movie_session.show_time} (row: {self.row}, seat: {self.seat})"
