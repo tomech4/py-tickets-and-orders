@@ -90,7 +90,7 @@ class Ticket(models.Model):
 
     class Meta:
         constraints = [
-            UniqueConstraint(fields=["row", "seat", "movie_session"])
+            UniqueConstraint(fields=["row", "seat", "movie_session"], name="reserved_seat")
         ]
 
 
