@@ -91,3 +91,7 @@ class Ticket(models.Model):
         constraints = [
             UniqueConstraint(fields=["row", "seat", "movie_session"])
         ]
+
+
+class User(AbstractUser):
+    pass
