@@ -65,7 +65,7 @@ class Order(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user_orders")
 
     def __str__(self):
-        return self.created_at
+        return f"{self.created_at}"
 
     class Meta:
         ordering = ["-created_at"]
@@ -81,8 +81,14 @@ class Ticket(models.Model):
         return f"{self.movie_session.movie.title} {self.movie_session.show_time} (row: {self.row}, seat: {self.seat})"
 
     def clean(self):
-        if self.row > self.movie_session.cinema_hall.rows or self.seat > self.movie_session.cinema_hall.seats_in_row:
-            raise ValidationError(f"Invalid seat/row value(s), max values allowed: seat - {self.movie_session.cinema_hall.seats_in_row}, row - {self.movie_session.cinema_hall.rows}; provided seat - {self.seat}, row - {self.row}")
+        if self.row > self.movie_session.cinema_hall.rows:
+            raise ValidationError({"row": [
+                f"row number must be in available range: (1, rows): (1, {self.movie_session.cinema_hall.rows})"]})
+        elif self.seat > self.movie_session.cinema_hall.seats_in_row:
+            raise ValidationError(
+                {"seat": [
+                    f"seat number must be in available range: (1, seats_in_row): (1, {self.movie_session.cinema_hall.seats_in_row})"]}
+            )
 
     def save(self, *args, **kwargs):
         self.full_clean()

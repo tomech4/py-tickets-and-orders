@@ -5,8 +5,8 @@ def create_user(
     username: str,
     password: str,
     email: str = None,
-    first_name: str = None,
-    last_name: str = None
+    first_name: str = "",
+    last_name: str = ""
 ):
     return User.objects.create_user(
         username=username,
@@ -17,7 +17,7 @@ def create_user(
     )
 
 def get_user(user_id: int):
-    return User.objects.get(user_id=user_id)
+    return User.objects.get(id=user_id)
 
 def update_user(
     user_id: int,
