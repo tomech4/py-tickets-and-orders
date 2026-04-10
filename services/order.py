@@ -1,16 +1,21 @@
 import datetime
 
 from django.db import transaction
+from django.db.models import QuerySet
 
 from db.models import Ticket, Order, User
 
 
 @transaction.atomic
-def create_order(tickets: list[dict], username: str, date: str = None):
+def create_order(
+        tickets: list[dict],
+        username: str,
+        date: str = None
+) -> list[Ticket]:
     user = User.objects.get(username=username)
     order = Order.objects.create(user=user)
     if date:
-        order.created_at = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M')
+        order.created_at = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
         order.save()
     return [
         Ticket.objects.create(
@@ -23,8 +28,11 @@ def create_order(tickets: list[dict], username: str, date: str = None):
 
 def get_orders(
         username: str = None
-):
+) -> QuerySet[Order]:
     query_set = Order.objects.all()
     if username:
-        query_set = query_set.select_related("user").filter(user__username=username)
+        query_set = (
+            query_set.select_related("user")
+                     .filter(user__username=username)
+        )
     return query_set
