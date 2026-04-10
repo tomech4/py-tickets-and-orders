@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from db.models import User
+import settings
 
 
 def create_user(
@@ -9,7 +9,7 @@ def create_user(
     email: str = None,
     first_name: str = "",
     last_name: str = ""
-) -> User:
+) -> settings.AUTH_USER_MODEL:
     return get_user_model().objects.create_user(
         username=username,
         password=password,
@@ -19,7 +19,7 @@ def create_user(
     )
 
 
-def get_user(user_id: int) -> User:
+def get_user(user_id: int) -> settings.AUTH_USER_MODEL:
     return get_user_model().objects.get(id=user_id)
 
 
